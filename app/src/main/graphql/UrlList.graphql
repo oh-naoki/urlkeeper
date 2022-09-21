@@ -1,0 +1,6 @@
+query UrlList{
+    urls {
+        url
+        createdAt
+    }
+}
