@@ -1,7 +1,6 @@
 package com.example.urlkeeper
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -9,17 +8,21 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -61,15 +64,16 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                Button(
+                IconButton(
                     modifier = Modifier
                         .padding(32.dp)
-                        .size(32.dp)
                         .align(Alignment.BottomEnd),
                     onClick = { openRegisterDialog = true }
                 ) {
                     Icon(
-                        painterResource(id = coil.base.R.drawable.ic_100tb),
+                        modifier = Modifier.size(48.dp),
+                        imageVector = Icons.Default.AddCircle,
+                        tint = Color.Black,
                         contentDescription = null
                     )
                 }
@@ -105,8 +109,14 @@ fun OgpPreview(
                 onClick(url)
             }
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            SiteImage(imageUrl = imageUrl.takeIf { it.isNotBlank() })
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            SiteImage(
+                modifier = Modifier.align(Alignment.Center),
+                imageUrl = imageUrl.takeIf { it.isNotBlank() }
+            )
             Image(
                 modifier = Modifier
                     .size(24.dp)
@@ -114,7 +124,7 @@ fun OgpPreview(
                     .clickable {
                         onDeleteClick()
                     },
-                painter = painterResource(id = coil.base.R.drawable.ic_100tb),
+                painter = rememberVectorPainter(image = Icons.Default.Delete),
                 contentDescription = null
             )
         }
@@ -153,14 +163,26 @@ fun RegisterUrlDialog(
 }
 
 @Composable
-fun SiteImage(imageUrl: String?) {
+fun SiteImage(
+    modifier: Modifier = Modifier,
+    imageUrl: String?
+) {
     if (imageUrl == null) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = null
+        Text(
+            text = "No Image",
+            style = TextStyle(
+                color = Color.DarkGray,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
+            ),
         )
     } else {
-        AsyncImage(model = imageUrl, contentDescription = null)
+        AsyncImage(
+            modifier = modifier,
+            model = imageUrl,
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
     }
 }
 
