@@ -1,0 +1,7 @@
+mutation RegisterUrl($input: RegisterUrlInput!){
+    registerUrl(input: $input){
+        url {
+            url
+        }
+    }
+}

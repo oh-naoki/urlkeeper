@@ -19,9 +19,8 @@ class OgpParseUseCase @Inject constructor(
                         response[it.attr("property")] = it.attr("content")
                     }
                 }
-            
             return@withContext OgpMeta(
-                title = response["og:title"].orEmpty(),
+                title = response["og:title"] ?: url,
                 description = response["og:description"].orEmpty(),
                 imageUrl = response["og:image"].orEmpty(),
                 url = response["og:url"].orEmpty()

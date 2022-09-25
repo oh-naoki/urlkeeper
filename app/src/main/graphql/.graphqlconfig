@@ -1,10 +1,10 @@
 {
   "name": "Untitled GraphQL Schema",
-  "schemaPath": "schema.graphql",
+  "schemaPath": "schema.graphqls",
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
-        "url": "http://localhost:3000/graphql",
+        "url": "https://url-memo-backend.herokuapp.com/graphql",
         "headers": {
           "user-agent": "JS GraphQL"
         },
