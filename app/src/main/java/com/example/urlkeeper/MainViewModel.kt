@@ -41,6 +41,8 @@ class MainViewModel @Inject constructor(
         registerUrlUseCase.registerUrl(url = url)
             .catch {
                 uiState = uiState.copy(error = it)
+            }.onEach {
+                request()
             }.launchIn(viewModelScope)
     }
 }

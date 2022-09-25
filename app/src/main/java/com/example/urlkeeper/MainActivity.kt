@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -45,20 +47,19 @@ class MainActivity : ComponentActivity() {
             var openRegisterDialog by remember { mutableStateOf(false) }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                Column(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState()),
+                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    uiState.ogpList.forEach {
+                    items(uiState.ogpList) {
                         OgpPreview(
                             title = it.title,
                             description = it.description,
                             imageUrl = it.imageUrl,
                             url = it.url,
-                            onClick = { viewModel.request() },
+                            onClick = {  },
                             onDeleteClick = {}
                         )
                     }
