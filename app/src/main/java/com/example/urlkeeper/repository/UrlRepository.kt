@@ -1,6 +1,8 @@
-package com.example.urlkeeper
+package com.example.urlkeeper.repository
 
 import com.apollographql.apollo3.ApolloClient
+import com.example.urlkeeper.RegisterUrlMutation
+import com.example.urlkeeper.UrlListQuery
 import com.example.urlkeeper.type.RegisterUrlInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull

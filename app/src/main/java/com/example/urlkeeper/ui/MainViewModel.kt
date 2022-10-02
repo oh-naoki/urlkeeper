@@ -5,6 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.urlkeeper.model.OgpMeta
+import com.example.urlkeeper.repository.UrlRepository
+import com.example.urlkeeper.usecase.OgpParseUseCase
+import com.example.urlkeeper.usecase.RegisterUrlUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -24,7 +28,11 @@ class MainViewModel @Inject constructor(
     var uiState by mutableStateOf(UiState())
         private set
 
-    fun request() {
+    init {
+        request()
+    }
+
+    private fun request() {
         viewModelScope.launch {
             uiState = uiState.copy(loading = true)
 

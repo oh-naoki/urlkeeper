@@ -1,4 +1,4 @@
-package com.example.urlkeeper
+package com.example.urlkeeper.repository
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

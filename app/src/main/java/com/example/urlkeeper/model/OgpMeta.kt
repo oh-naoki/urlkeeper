@@ -1,4 +1,4 @@
-package com.example.urlkeeper
+package com.example.urlkeeper.model
 
 data class OgpMeta(
     val title: String,

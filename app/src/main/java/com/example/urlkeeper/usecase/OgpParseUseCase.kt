@@ -1,5 +1,7 @@
-package com.example.urlkeeper
+package com.example.urlkeeper.usecase
 
+import com.example.urlkeeper.model.OgpMeta
+import com.example.urlkeeper.repository.HTMLParseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

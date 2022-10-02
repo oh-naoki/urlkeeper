@@ -1,6 +1,10 @@
 package com.example.urlkeeper.di
 
-import com.example.urlkeeper.*
+import com.example.urlkeeper.Apollo
+import com.example.urlkeeper.repository.HTMLParseRepository
+import com.example.urlkeeper.repository.UrlRepository
+import com.example.urlkeeper.usecase.OgpParseUseCase
+import com.example.urlkeeper.usecase.RegisterUrlUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

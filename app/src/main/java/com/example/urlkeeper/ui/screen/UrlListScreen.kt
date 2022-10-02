@@ -1,10 +1,8 @@
 package com.example.urlkeeper
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,69 +31,67 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.urlkeeper.model.OgpMeta
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+@Composable
+fun UrlListScreen(
+    toWebViewContent: (String) -> Unit,
+    viewModel: MainViewModel
+) {
+    val uiState = viewModel.uiState
+    var openRegisterDialog by remember { mutableStateOf(false) }
 
-    private val viewModel: MainViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.request()
-        setContent {
-            val uiState = viewModel.uiState
-            var openRegisterDialog by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        UrlList(ogpList = uiState.ogpList, toWebViewContent = toWebViewContent)
 
-            Box(modifier = Modifier.fillMaxSize()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(uiState.ogpList) {
-                        OgpPreview(
-                            title = it.title,
-                            description = it.description,
-                            imageUrl = it.imageUrl,
-                            url = it.url,
-                            onClick = {  },
-                            onDeleteClick = {}
-                        )
-                    }
-                }
-
-                IconButton(
-                    modifier = Modifier
-                        .padding(32.dp)
-                        .align(Alignment.BottomEnd),
-                    onClick = { openRegisterDialog = true }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(48.dp),
-                        imageVector = Icons.Default.AddCircle,
-                        tint = Color.Black,
-                        contentDescription = null
-                    )
-                }
-
-                if (openRegisterDialog) {
-                    RegisterUrlDialog(
-                        onSubmit = { viewModel.registerUrl(it) },
-                        onDismiss = { openRegisterDialog = false }
-                    )
-                }
-
-                if (uiState.loading) {
-                    Text(modifier = Modifier.align(Alignment.Center), text = "Loading")
-                }
+        RegisterButton(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onClick = {
+                openRegisterDialog = true
             }
+        )
+
+        if (openRegisterDialog) {
+            RegisterUrlDialog(
+                onSubmit = { viewModel.registerUrl(it) },
+                onDismiss = { openRegisterDialog = false }
+            )
+        }
+
+        if (uiState.loading) {
+            Text(modifier = Modifier.align(Alignment.Center), text = "Loading")
         }
     }
 }
 
 @Composable
-fun OgpPreview(
+private fun UrlList(
+    ogpList: List<OgpMeta>,
+    toWebViewContent: (String) -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(ogpList) {
+            OgpPreview(
+                title = it.title,
+                description = it.description,
+                imageUrl = it.imageUrl,
+                url = it.url,
+                onClick = {
+                    toWebViewContent(it)
+                },
+                onDeleteClick = {}
+            )
+        }
+    }
+}
+
+@Composable
+private fun OgpPreview(
     title: String,
     description: String,
     imageUrl: String,
@@ -139,7 +135,26 @@ fun OgpPreview(
 }
 
 @Composable
-fun RegisterUrlDialog(
+private fun RegisterButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    IconButton(
+        modifier = modifier
+            .padding(32.dp),
+        onClick = onClick
+    ) {
+        Icon(
+            modifier = Modifier.size(48.dp),
+            imageVector = Icons.Default.AddCircle,
+            tint = Color.Black,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun RegisterUrlDialog(
     onSubmit: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -164,7 +179,7 @@ fun RegisterUrlDialog(
 }
 
 @Composable
-fun SiteImage(
+private fun SiteImage(
     modifier: Modifier = Modifier,
     imageUrl: String?
 ) {
