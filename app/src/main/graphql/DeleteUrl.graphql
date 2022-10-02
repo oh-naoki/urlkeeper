@@ -1,0 +1,5 @@
+mutation DeleteUrl($input: DeleteUrlInput!){
+    deleteUrl(input: $input){
+        clientMutationId
+    }
+}

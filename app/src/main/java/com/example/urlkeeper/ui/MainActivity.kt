@@ -9,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.urlkeeper.MainViewModel
-import com.example.urlkeeper.UrlListScreen
 import com.example.urlkeeper.ui.screen.WebViewScreen
+import com.example.urlkeeper.ui.screen.url_list.UrlListScreen
+import com.example.urlkeeper.ui.screen.url_list.UrlListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = "urllist") {
                 composable("urllist") {
-                    val viewModel: MainViewModel = hiltViewModel()
+                    val viewModel: UrlListViewModel = hiltViewModel()
                     UrlListScreen(
                         toWebViewContent = {
                             navController.navigate("webview?url=$it")

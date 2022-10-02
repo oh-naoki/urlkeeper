@@ -9,7 +9,7 @@ import javax.inject.Inject
 class OgpParseUseCase @Inject constructor(
     private val htmlParseRepository: HTMLParseRepository
 ) {
-    suspend fun getOgp(url: String): OgpMeta {
+    suspend fun getOgp(id: String, url: String): OgpMeta {
         val keys = listOf("og:image", "og:description", "og:url", "og:title")
         val response = mutableMapOf<String, String>()
 
@@ -22,6 +22,7 @@ class OgpParseUseCase @Inject constructor(
                     }
                 }
             return@withContext OgpMeta(
+                id = id,
                 title = response["og:title"] ?: url,
                 description = response["og:description"].orEmpty(),
                 imageUrl = response["og:image"].orEmpty(),

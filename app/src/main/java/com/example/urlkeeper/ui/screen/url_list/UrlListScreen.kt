@@ -1,4 +1,4 @@
-package com.example.urlkeeper
+package com.example.urlkeeper.ui.screen.url_list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,13 +36,17 @@ import com.example.urlkeeper.model.OgpMeta
 @Composable
 fun UrlListScreen(
     toWebViewContent: (String) -> Unit,
-    viewModel: MainViewModel
+    viewModel: UrlListViewModel
 ) {
     val uiState = viewModel.uiState
     var openRegisterDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        UrlList(ogpList = uiState.ogpList, toWebViewContent = toWebViewContent)
+        UrlList(
+            ogpList = uiState.ogpList,
+            toWebViewContent = toWebViewContent,
+            onDeleteClick = viewModel::deleteUrl
+        )
 
         RegisterButton(
             modifier = Modifier.align(Alignment.BottomEnd),
@@ -53,13 +57,15 @@ fun UrlListScreen(
 
         if (openRegisterDialog) {
             RegisterUrlDialog(
-                onSubmit = { viewModel.registerUrl(it) },
+                onSubmit = viewModel::registerUrl,
                 onDismiss = { openRegisterDialog = false }
             )
         }
 
         if (uiState.loading) {
-            Text(modifier = Modifier.align(Alignment.Center), text = "Loading")
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(modifier = Modifier.align(Alignment.Center), text = "Loading")
+            }
         }
     }
 }
@@ -67,7 +73,8 @@ fun UrlListScreen(
 @Composable
 private fun UrlList(
     ogpList: List<OgpMeta>,
-    toWebViewContent: (String) -> Unit
+    toWebViewContent: (String) -> Unit,
+    onDeleteClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -77,6 +84,7 @@ private fun UrlList(
     ) {
         items(ogpList) {
             OgpPreview(
+                id = it.id,
                 title = it.title,
                 description = it.description,
                 imageUrl = it.imageUrl,
@@ -84,7 +92,9 @@ private fun UrlList(
                 onClick = {
                     toWebViewContent(it)
                 },
-                onDeleteClick = {}
+                onDeleteClick = {
+                    onDeleteClick(it)
+                }
             )
         }
     }
@@ -92,12 +102,13 @@ private fun UrlList(
 
 @Composable
 private fun OgpPreview(
+    id: String,
     title: String,
     description: String,
     imageUrl: String,
     url: String,
     onClick: (String) -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -119,7 +130,7 @@ private fun OgpPreview(
                     .size(24.dp)
                     .align(Alignment.TopEnd)
                     .clickable {
-                        onDeleteClick()
+                        onDeleteClick(id)
                     },
                 painter = rememberVectorPainter(image = Icons.Default.Delete),
                 contentDescription = null
@@ -207,6 +218,7 @@ private fun SiteImage(
 fun PreviewOgpPreview() {
     Box(modifier = Modifier.background(Color.White)) {
         OgpPreview(
+            id = "1",
             title = "Flutter - Build apps for any screen",
             description = "Flutter transforms the entire app development process. Build, test, and deploy beautiful mobile, web, desktop, and embedded apps from a single codebase.",
             imageUrl = "",

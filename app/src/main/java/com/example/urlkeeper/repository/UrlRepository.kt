@@ -1,8 +1,10 @@
 package com.example.urlkeeper.repository
 
 import com.apollographql.apollo3.ApolloClient
+import com.example.urlkeeper.DeleteUrlMutation
 import com.example.urlkeeper.RegisterUrlMutation
 import com.example.urlkeeper.UrlListQuery
+import com.example.urlkeeper.type.DeleteUrlInput
 import com.example.urlkeeper.type.RegisterUrlInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
@@ -24,6 +26,14 @@ class UrlRepository @Inject constructor(
             url = url
         )
         return apolloClient.mutation(RegisterUrlMutation(input = input))
+            .toFlow()
+            .mapNotNull { it.data }
+    }
+
+    fun deleteUrl(id: String): Flow<DeleteUrlMutation.Data> {
+        val input = DeleteUrlInput(id = id)
+
+        return apolloClient.mutation(DeleteUrlMutation(input = input))
             .toFlow()
             .mapNotNull { it.data }
     }
