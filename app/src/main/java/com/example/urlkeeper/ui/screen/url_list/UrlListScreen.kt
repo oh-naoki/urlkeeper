@@ -1,8 +1,6 @@
 package com.example.urlkeeper.ui.screen.url_list
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +21,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -64,7 +64,10 @@ fun UrlListScreen(
 
         if (uiState.loading) {
             Box(modifier = Modifier.fillMaxSize()) {
-                Text(modifier = Modifier.align(Alignment.Center), text = "Loading")
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "Loading"
+                )
             }
         }
     }
@@ -100,6 +103,7 @@ private fun UrlList(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OgpPreview(
     id: String,
@@ -110,12 +114,14 @@ private fun OgpPreview(
     onClick: (String) -> Unit,
     onDeleteClick: (String) -> Unit
 ) {
+    val clipboardManager = LocalClipboardManager.current
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .clickable {
-                onClick(url)
-            }
+            .combinedClickable(
+                onClick = { onClick(url) },
+                onLongClick = { clipboardManager.setText(AnnotatedString(url)) }
+            )
     ) {
         Box(
             modifier = Modifier
